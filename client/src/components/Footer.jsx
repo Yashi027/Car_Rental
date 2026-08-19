@@ -3,7 +3,7 @@ import { assets } from '../assets/assets';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-light border-t border-borderColor/50">
+    <footer className="w-full mt-16 bg-light border-t border-borderColor/50">
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20 xl:px-24 py-16">
 

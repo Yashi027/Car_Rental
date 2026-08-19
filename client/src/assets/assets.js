@@ -102,11 +102,11 @@ export const ownerMenuLinks = [
 ]
 
 export const dummyUserData = {
-  "_id": "6847f7cab3d8daecdb517095",
-  "name": "GreatStack",
-  "email": "admin@example.com",
-  "role": "owner",
-  "image": user_profile,
+    "_id": "6847f7cab3d8daecdb517095",
+    "name": "GreatStack",
+    "email": "admin@example.com",
+    "role": "owner",
+    "image": user_profile,
 }
 
 export const dummyCarData = [
@@ -177,6 +177,23 @@ export const dummyCarData = [
         "description": "This is a mid-size luxury sedan produced by Toyota. The Corolla made its debut in 2008 as the first sedan ever produced by Toyota.",
         "isAvaliable": true,
         "createdAt": "2025-04-17T06:15:47.318Z",
+    },
+    {
+        "_id": "67ff5bc069c03d4e45f30b78",
+        "owner": "67fe3467ed8a8fe17d0ba6e2",
+        "brand": "BMW",
+        "model": "X5",
+        "image": car_image1,
+        "year": 2008,
+        "category": "SUV",
+        "seating_capacity": 4,
+        "fuel_type": "Hybrid",
+        "transmission": "Semi-Automatic",
+        "pricePerDay": 300,
+        "location": "Chennai",
+        "description": "The BMW X5 is a mid-size luxury SUV produced by BMW. The X5 made its debut in 1999 as the first SUV ever produced by BMW.",
+        "isAvaliable": true,
+        "createdAt": "2025-04-16T07:26:56.215Z",
     }
 ];
 
