@@ -30,7 +30,6 @@ const MyBookings = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 h-full">
 
-                  {/* Car Image */}
                   <div className="lg:col-span-4 relative bg-gray-100 h-full overflow-hidden">
                     <img src={booking.car.image} alt={`${booking.car.brand} ${booking.car.model}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
 
@@ -39,7 +38,6 @@ const MyBookings = () => {
                     </div>
                   </div>
 
-                  {/* Booking Details */}
                   <div className="lg:col-span-5 p-6 lg:p-8 h-full flex flex-col justify-center">
 
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -55,7 +53,6 @@ const MyBookings = () => {
 
                     <div className="border-t border-gray-100 my-5"></div>
 
-                    {/* Rental Period */}
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
                         <img src={assets.calendar_icon_colored} alt="" className="w-5 h-5" />
@@ -67,7 +64,6 @@ const MyBookings = () => {
                       </div>
                     </div>
 
-                    {/* Location */}
                     <div className="flex items-start gap-4 mt-4">
                       <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center shrink-0">
                         <img src={assets.location_icon_colored} alt="" className="w-5 h-5" />
@@ -81,7 +77,6 @@ const MyBookings = () => {
 
                   </div>
 
-                  {/* Price Section */}
                   <div className="lg:col-span-3 bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-200 p-6 lg:p-8 h-full flex flex-col justify-center">
 
                     <div className="text-right">
