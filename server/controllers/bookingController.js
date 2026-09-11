@@ -1,5 +1,5 @@
-import Booking from "../models/Booking"
-import Car from "../models/Car";
+import Booking from "../models/Booking.js"
+import Car from "../models/Car.js";
 
 const checkAvailability = async (car, pickUpDate, returnDate) => {
     const bookings = await Booking.find({
@@ -54,6 +54,60 @@ export const createBooking = async (req, res) => {
         await Booking.create({ car, owner: carData.owner, user: _id, pickUpDate, returnDate, price })
 
         return res.json({ succes: true, message: "Booking Created" });
+    } catch (error) {
+        console.log(error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+export const getUserBookings = async (req, res) => {
+    try {
+        const { _id } = req.user;
+        const bookings = await Booking.find({ user: _id }).populate("car").sort({ createdAt: -1 });
+        return res.json({ success: true, message: "Bookings fetched", bookings })
+    } catch (error) {
+        console.log(error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+export const getOwnerBookings = async (req, res) => {
+    try {
+        if (req.user.role !== 'owner') {
+            return res.status(401).json({ success: false, message: "Unauthorised" });
+        }
+        const bookings = await Booking.find({ owner: req.user._id }).populate('car user').select("-user.password").sort({ createdAt: -1 });
+        return res.json({ succes: true, bookings });
+    } catch (error) {
+        console.log(error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+export const changeBookingStatus = async (req, res) => {
+    try {
+        const { _id } = req.user;
+        const { bookingId, status } = req.body;
+        const booking = await Booking.findById(bookingId)
+
+        if (booking.owner.toString() !== _id.toString()) {
+            return res.status(401).json({ success: false, message: "Unauthorised" });
+        }
+        booking.status = status;
+        await booking.save();
+        return res.json({ success: true, message: "Status updated" })
     } catch (error) {
         console.log(error.message);
 
