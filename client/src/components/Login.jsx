@@ -1,12 +1,14 @@
 
 import React from 'react';
+import { useAppContext } from '../context/AppContext';
 
-const Login = ({ setShowLogin }) => {
+const Login = () => {
 
     const [state, setState] = React.useState("login");
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const {setShowLogin} = useAppContext();
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();

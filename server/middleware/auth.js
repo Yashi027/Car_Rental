@@ -2,20 +2,50 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
-        return res.status(401).json({ success: false, message: "Unauthorised" })
-    }
     try {
-        const userId = jwt.decode(token, process.env.JWT_SECRET);
-        if (!userId) {
-            return res.status(401).json({ success: false, message: "Unauthorised" })
+        const token = req.headers.authorization;
+
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorised"
+            });
         }
 
-        req.user = await User.findById(userId).select("-password")
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+        const userId = decoded.id;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorised"
+            });
+        }
+
+        const user = await User.findById(userId)
+            .select("-password");
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        req.user = user;
+
         next();
+
     } catch (error) {
-        console.log(error.message)
-        return res.status(500).json({ success: false, message: "Not Authorised" })
+        console.log("AUTH ERROR:", error.message);
+
+        return res.status(401).json({
+            success: false,
+            message: error.message
+        });
     }
-}
+};
