@@ -11,6 +11,6 @@ ownerRouter.get('/add-car', upload.single("image"), protect, addCar)
 ownerRouter.post('/toggle-car', protect, toggleCarAvailability)
 ownerRouter.post('/delete-car', protect, deleteCar)
 ownerRouter.get('/dashboard', protect, getDashboardData);
-ownerRouter.post('/update-image',upload.single("image"),updateUserImage);
+ownerRouter.post('/update-image',protect, upload.single("image"),updateUserImage);
 
 export default ownerRouter;

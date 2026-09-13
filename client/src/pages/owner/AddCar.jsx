@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Title from '../../components/owner/Title';
 import { assets } from '../../assets/assets';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AddCar = () => {
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [car, setCar] = useState({
     brand: '',
@@ -27,11 +30,40 @@ const AddCar = () => {
     }));
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (isLoading)
+      return null;
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('carData', JSON.stringify(car))
 
-    console.log('Car Details:', car);
-    console.log('Car Image:', image);
+      const { data } = await axios.post('/api/owner/add-car', formData)
+      if (data.success) {
+        toast.success(data.message)
+        setImage(null)
+        setCar({
+          brand: '',
+          model: '',
+          year: '',
+          pricePerDay: '',
+          category: '',
+          transmission: '',
+          fuel_type: '',
+          seating_capacity: 2,
+          location: '',
+          description: ''
+        })
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -334,7 +366,7 @@ const AddCar = () => {
               type="submit"
               className="px-7 py-2.5 rounded-lg bg-primary text-white font-medium hover:opacity-90 active:scale-95 transition-all shadow-sm"
             >
-              Add Car
+              {isLoading ? 'Listing..' : 'Add Car'}
             </button>
 
           </div>

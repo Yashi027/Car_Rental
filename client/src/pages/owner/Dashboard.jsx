@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { assets, dummyDashboardData } from '../../assets/assets';
 import Title from '../../components/owner/Title';
+import axios from 'axios';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
 
+  const { isOwner } = useAppContext()
+
   const [data, setData] = useState({
-    totalCars: 0,
+    totalcars: 0,
     totalBookings: 0,
     pendingBookings: 0,
     completedBookings: 0,
@@ -14,15 +19,30 @@ const Dashboard = () => {
   });
 
   const dashboardCards = [
-    { title: "Total Cars", value: data.totalCars, icon: assets.carIconColored },
+    { title: "Total Cars", value: data.totalcars, icon: assets.carIconColored },
     { title: "Total Bookings", value: data.totalBookings, icon: assets.listIconColored },
     { title: "Pending", value: data.pendingBookings, icon: assets.cautionIconColored },
     { title: "Confirmed", value: data.completedBookings, icon: assets.listIconColored }
   ];
 
+  const fetchDashboardData = async () => {
+    try {
+      const { data } = await axios.get('/api/owner/dashboard')
+      if (data.success) {
+        setData(data.dashboardData)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
-    setData(dummyDashboardData);
-  }, []);
+    if (isOwner) {
+      fetchDashboardData();
+    }
+  }, [isOwner]);
 
   return (
     <div className="px-4 pt-8 pb-10 md:px-10 flex-1 bg-gray-50 min-h-screen">

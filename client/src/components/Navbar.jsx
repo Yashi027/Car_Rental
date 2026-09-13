@@ -47,7 +47,7 @@ const Navbar = () => {
 
                 <div className='flex max-sm:flex-col items-start gap-6 sm:items-center'>
                     <button className='cursor-pointer' onClick={() => {isOwner? navigate('/owner') : changeRole()}}>{isOwner? 'Dashboard' : 'List Cars'}</button>
-                    <button onClick={() => {user ? logout : setShowLogin(true)}} className='cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg'>{user? 'Logout' : 'Login'}</button>
+                    <button onClick={() => {user ? logout() : setShowLogin(true)}} className='cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg'>{user? 'Logout' : 'Login'}</button>
                 </div>
             </div>
             <button className='sm:hidden cursor-pointer' aria-label='Menu' onClick={() => setOpen(!open)}>

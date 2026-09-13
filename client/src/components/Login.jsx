@@ -1,6 +1,8 @@
-
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 
@@ -8,10 +10,24 @@ const Login = () => {
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const {setShowLogin} = useAppContext();
+    const {setShowLogin, setToken} = useAppContext();
+    const navigate = useNavigate();
 
     const onSubmitHandler = async (e) => {
-        e.preventDefault();
+        try {
+            e.preventDefault();
+            const {data} = await axios.post(`/api/user/${state}`, {name,email,password})
+            if(data.success){
+                navigate('/')
+                setToken(data.token)
+                localStorage.setItem('token',data.token)
+                setShowLogin(false)
+            }else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     };
 
     return (
