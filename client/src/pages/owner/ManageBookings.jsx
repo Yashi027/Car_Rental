@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import Title from '../../components/owner/Title';
-import { dummyMyBookingsData } from '../../assets/assets';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ManageBookings = () => {
   const [bookings, setBookings] = useState([])
 
   const fetchOwnerBookings = async () => {
-    setBookings(dummyMyBookingsData);
+    try {
+      const { data } = await axios.get('/api/booking/owner');
+
+      if (data.success) {
+        setBookings(data.bookings || []);
+      } else {
+        toast.error(data.message || "Failed to fetch bookings");
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const changeBookingStatus = async (bookingId, status) => {
+    try {
+      const { data } = await axios.post('/api/booking/change-status', { bookingId, status })
+      if (data.success) {
+        toast.success(data.message)
+        fetchOwnerBookings()
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error.message)
+    }
   }
 
   useEffect(() => {
@@ -102,7 +128,10 @@ const ManageBookings = () => {
 
                     <td className="px-5 py-4">
                       {booking.status === 'pending' ? (
-                        <select value={booking.status} className='px-2 py-1.5 mt-1 text-gray-500 border border-borderColor rounded-md outline-none'>
+                        <select
+                          value={booking.status}
+                          className='px-2 py-1.5 mt-1 text-gray-500 border border-borderColor rounded-md outline-none'
+                          onChange={(e) => changeBookingStatus(booking._id, e.target.value)}>
                           <option value="pending">Pending</option>
                           <option value="cancelled">Cancelled</option>
                           <option value="confirmed">Confirmed</option>

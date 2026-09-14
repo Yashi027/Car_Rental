@@ -85,7 +85,7 @@ export const getOwnerBookings = async (req, res) => {
             return res.status(401).json({ success: false, message: "Unauthorised" });
         }
         const bookings = await Booking.find({ owner: req.user._id }).populate('car user').select("-user.password").sort({ createdAt: -1 });
-        return res.json({ succes: true, bookings });
+        return res.json({ success: true, bookings });
     } catch (error) {
         console.log(error.message);
 

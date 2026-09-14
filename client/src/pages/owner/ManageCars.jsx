@@ -1,17 +1,66 @@
 import React, { useEffect, useState } from 'react';
-import { assets, dummyCarData } from '../../assets/assets';
+import { assets } from '../../assets/assets';
 import Title from '../../components/owner/Title';
+import { useAppContext } from '../../context/AppContext';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ManageCars = () => {
+  const { isOwner } = useAppContext();
   const [cars, setCars] = useState([]);
 
-  const fetchOwnerCars = () => {
-    setCars(dummyCarData);
+  const fetchOwnerCars = async () => {
+    try {
+      const { data } = await axios.get('/api/owner/cars')
+      if (data.success) {
+        setCars(data.cars)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
+  const toggleAvailability = async (carId) => {
+    try {
+      const { data } = await axios.post('/api/owner/toggle-car', { carId })
+      if (data.success) {
+        fetchOwnerCars()
+        toast.success(data.message)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error.message)
+    }
+  }
+
+  const deleteCar = async (carId) => {
+    try {
+      const confirm = window.confirm('Are you sure you want to delete this car?');
+
+      if (!confirm)
+        return null;
+
+      const { data } = await axios.post('/api/owner/delete-car', { carId })
+
+      if (data.success) {
+        fetchOwnerCars()
+        toast.success(data.message)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+      console.log(error.message)
+    }
+  }
+
   useEffect(() => {
-    fetchOwnerCars();
-  }, []);
+    isOwner && fetchOwnerCars();
+  }, [isOwner]);
 
   return (
     <div className="w-full min-h-screen bg-gray-50 px-4 pt-8 pb-10 md:px-8 lg:px-10">
@@ -118,21 +167,19 @@ const ManageCars = () => {
 
                     <td className="px-5 py-4 max-md:hidden">
                       <span
-                        className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${
-                          car.isAvaliable
+                        className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${car.isAvailable
                             ? 'bg-green-50 text-green-600'
                             : 'bg-red-50 text-red-600'
-                        }`}
+                          }`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            car.isAvaliable
+                          className={`h-1.5 w-1.5 rounded-full ${car.isAvailable
                               ? 'bg-green-500'
                               : 'bg-red-500'
-                          }`}
+                            }`}
                         ></span>
 
-                        {car.isAvaliable
+                        {car.isAvailable
                           ? 'Available'
                           : 'Unavailable'}
                       </span>
@@ -144,7 +191,7 @@ const ManageCars = () => {
                         <button
                           type="button"
                           title={
-                            car.isAvaliable
+                            car.isAvailable
                               ? 'Make unavailable'
                               : 'Make available'
                           }
@@ -152,12 +199,13 @@ const ManageCars = () => {
                         >
                           <img
                             src={
-                              car.isAvaliable
+                              car.isAvailable
                                 ? assets.eye_close_icon
                                 : assets.eye_icon
                             }
                             alt="Availability"
                             className="h-6 w-6"
+                            onClick={() => toggleAvailability(car._id)}
                           />
                         </button>
 
@@ -170,6 +218,7 @@ const ManageCars = () => {
                             src={assets.delete_icon}
                             alt="Delete"
                             className="h-6 w-6"
+                            onClick={() => deleteCar(car._id)}
                           />
                         </button>
 
