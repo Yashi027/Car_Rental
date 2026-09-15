@@ -62,20 +62,25 @@ export const AppProvider = ({ children }) => {
     }
 
     const logout = () => {
-        localStorage.removeItem('token')
-        setToken(null)
-        setUser(null)
-        setIsOwner(false)
-        axios.defaults.headers.common['Authorization'] = ''
-        toast.success('You have been logged out')
-    }
+        localStorage.removeItem('token');
+
+        setToken(null);
+        setUser(null);
+        setIsOwner(false);
+
+        delete axios.defaults.headers.common['Authorization'];
+
+        toast.success('You have been logged out');
+    };
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
 
         if (storedToken) {
             setToken(storedToken);
-            axios.defaults.headers.common['Authorization'] = storedToken;
+
+            axios.defaults.headers.common['Authorization'] =
+                `Bearer ${storedToken}`;
         } else {
             setLoading(false);
         }

@@ -1,16 +1,19 @@
+
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        const authHeader = req.headers.authorization;
 
-        if (!token) {
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({
                 success: false,
                 message: "Unauthorised"
             });
         }
+
+        const token = authHeader.split(" ")[1];
 
         const decoded = jwt.verify(
             token,

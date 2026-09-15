@@ -1,14 +1,21 @@
-import React from 'react';
 import { assets, cityList } from '../assets/assets';
 import { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
 
 const Hero = () => {
     const [pickupLocation, setPickupLocation] = useState()
+    const { pickupDate, setPickupDate, navigate, returnDate, setReturnDate } = useAppContext();
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        navigate('/cars?pickupLocation=' + pickupLocation + '&pickupDate=' + pickupDate + '&returnDate=' + returnDate);
+
+    }
 
     return (
         <div className='h-screen flex flex-col items-center justify-center gap-14 bg-light text-center'>
             <h1 className='text-4xl md:text-5xl font-semibold'>Luxury cars on Rent</h1>
-            <form className='flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]'>
+            <form onSubmit={handleSearch} className='flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]'>
 
                 <div className='flex flex-col md:flex-row items-start md:items-center gap-10 min-md:ml-8'>
 
@@ -22,12 +29,26 @@ const Hero = () => {
 
                     <div className='flex flex-col gap-2 items-start'>
                         <label htmlFor="pickup-date">Pickup Date</label>
-                        <input type="date" id="pickup-date" min={new Date().toISOString().split('T')[0]} className='text-sm text-gray-500' required />
+                        <input
+                            value={pickupDate}
+                            onChange={e => setPickupDate(e.target.value)}
+                            type="date"
+                            id="pickup-date"
+                            min={new Date().toISOString().split('T')[0]}
+                            className='text-sm text-gray-500'
+                            required />
                     </div>
 
                     <div className='flex flex-col gap-2 items-start'>
                         <label htmlFor="return-date">Return Date</label>
-                        <input type="date" id="return-date" min={new Date().toISOString().split('T')[0]} className='text-sm text-gray-500' required />
+                        <input
+                            value={returnDate}
+                            onChange={e => setReturnDate(e.target.value)}
+                            type="date"
+                            id="return-date"
+                            min={new Date().toISOString().split('T')[0]}
+                            className='text-sm text-gray-500'
+                            required />
                     </div>
 
                 </div>

@@ -1,20 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { assets, dummyCarData } from '../assets/assets';
 import Loader from '../components/Loader';
+import axios from 'axios';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const CarDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const { cars, navigate, pickupDate, setPickupDate, returnDate, setReturnDate } = useAppContext();
 
   const [car, setCar] = useState(null)
 
   useEffect(() => {
-    setCar(dummyCarData.find(car => car._id === id))
-  }, [id]);
+    setCar(cars.find(car => car._id === id))
+  }, [cars, id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const { data } = await axios.post('/api/booking/create', {
+        car: id,
+        pickupDate,
+        returnDate
+      })
+      if (data.success) {
+        toast.success(data.message)
+        navigate('/my-bookings')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
 
   return car ? (
@@ -86,9 +104,9 @@ const CarDetails = () => {
           </div>
         </div>
 
-        <form 
-        className='shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500'
-        onSubmit={handleSubmit}>
+        <form
+          className='shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500'
+          onSubmit={handleSubmit}>
 
           <p className='flex items-center justify-between text-2xl text-gray-800 font-semibold'>
             Rs.{car.pricePerDay} <span className='text-base text-gray-400 font-normal'>per day</span>
@@ -100,6 +118,8 @@ const CarDetails = () => {
             <label htmlFor="pickup-date">Pickup Date</label>
             <input
               type="date"
+              value={pickupDate}
+              onChange={(e) => setPickupDate(e.target.value)}
               className='border border-borderColor px-3 py-2 rounded-lg'
               id='pickup-date'
               min={new Date().toISOString().split('T')[0]}
@@ -110,6 +130,8 @@ const CarDetails = () => {
             <label htmlFor="return-date">Return Date</label>
             <input
               type="date"
+              value={returnDate}
+              onChange={(e) => setReturnDate(e.target.value)}
               className='border border-borderColor px-3 py-2 rounded-lg'
               id='return-date'
               min={new Date().toISOString().split('T')[0]}

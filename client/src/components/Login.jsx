@@ -10,19 +10,22 @@ const Login = () => {
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const {setShowLogin, setToken} = useAppContext();
+    const { setShowLogin, setToken } = useAppContext();
     const navigate = useNavigate();
 
     const onSubmitHandler = async (e) => {
         try {
             e.preventDefault();
-            const {data} = await axios.post(`/api/user/${state}`, {name,email,password})
-            if(data.success){
-                navigate('/')
+            const { data } = await axios.post(`/api/user/${state}`, { name, email, password })
+            if (data.success) {
+                localStorage.setItem('token', data.token)
                 setToken(data.token)
-                localStorage.setItem('token',data.token)
+                axios.defaults.headers.common['Authorization'] =
+                    `Bearer ${data.token}`;
+                toast.success(data.message);
                 setShowLogin(false)
-            }else{
+                navigate('/');
+            } else {
                 toast.error(data.message)
             }
         } catch (error) {

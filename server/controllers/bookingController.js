@@ -1,22 +1,22 @@
 import Booking from "../models/Booking.js"
 import Car from "../models/Car.js";
 
-const checkAvailability = async (car, pickUpDate, returnDate) => {
+const checkAvailability = async (car, pickupDate, returnDate) => {
     const bookings = await Booking.find({
         car,
-        pickUpDate: { $lte: returnDate },
-        returnDate: { $gte: pickUpDate }
+        pickupDate: { $lte: returnDate },
+        returnDate: { $gte: pickupDate }
     })
     return bookings.length == 0;
 }
 
 export const checkAvailabilityOfCar = async (req, res) => {
     try {
-        const { location, pickUpDate, returnDate } = req.body;
+        const { location, pickupDate, returnDate } = req.body;
         const cars = await Car.find({ location, isAvailable: true });
 
         const availableCarsPromises = cars.map(async (car) => {
-            const isAvailable = await checkAvailability(car, pickUpDate, returnDate)
+            const isAvailable = await checkAvailability(car, pickupDate, returnDate)
             return { ...car._doc, isAvailable: isAvailable }
         })
 
@@ -37,32 +37,90 @@ export const checkAvailabilityOfCar = async (req, res) => {
 export const createBooking = async (req, res) => {
     try {
         const { _id } = req.user;
-        const { car, pickUpDate, returnDate } = req.body;
+        const { car, pickupDate, returnDate } = req.body;
 
-        const isAvailable = await checkAvailability(car, pickUpDate, returnDate)
-        if (!isAvailable) {
-            return res.status(404).json({ success: false, message: "Car is not available" })
+        if (!car || !pickupDate || !returnDate) {
+            return res.status(400).json({
+                success: false,
+                message: "Car, pickup date and return date are required"
+            });
         }
 
-        const carData = await Car.findById(car)
-        const picked = new Date(pickUpDate);
+        const picked = new Date(pickupDate);
         const returned = new Date(returnDate);
-        const noOfDays = Math.ceil((returned - picked) / 1000 * 60 * 60 * 24)
 
-        const price = carData.pricePerDay * noOfDays;
+        if (isNaN(picked.getTime()) || isNaN(returned.getTime())) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid date format"
+            });
+        }
 
-        await Booking.create({ car, owner: carData.owner, user: _id, pickUpDate, returnDate, price })
+        if (returned <= picked) {
+            return res.status(400).json({
+                success: false,
+                message: "Return date must be after pickup date"
+            });
+        }
 
-        return res.json({ succes: true, message: "Booking Created" });
+        const isAvailable = await checkAvailability(
+            car,
+            pickupDate,
+            returnDate
+        );
+
+        if (!isAvailable) {
+            return res.status(404).json({
+                success: false,
+                message: "Car is not available"
+            });
+        }
+
+        const carData = await Car.findById(car);
+
+        if (!carData) {
+            return res.status(404).json({
+                success: false,
+                message: "Car not found"
+            });
+        }
+
+        const noOfDays = Math.ceil(
+            (returned - picked) / (1000 * 60 * 60 * 24)
+        );
+
+        const price = Number(carData.pricePerDay) * noOfDays;
+
+        if (isNaN(price)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid car price"
+            });
+        }
+
+        await Booking.create({
+            car,
+            owner: carData.owner,
+            user: _id,
+            pickupDate,
+            returnDate,
+            price
+        });
+
+        return res.json({
+            success: true,
+            message: "Booking Created"
+        });
+
     } catch (error) {
         console.log(error.message);
 
         return res.status(500).json({
             success: false,
-            message: error.message,
+            message: error.message
         });
     }
-}
+};
 
 export const getUserBookings = async (req, res) => {
     try {
