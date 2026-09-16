@@ -60,7 +60,7 @@ const ManageBookings = () => {
                   Car
                 </th>
 
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500 max-md:hidden">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
                   Date Range
                 </th>
 
@@ -68,7 +68,7 @@ const ManageBookings = () => {
                   Total
                 </th>
 
-                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500 max-md:hidden">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500 ">
                   Payment
                 </th>
 
@@ -105,9 +105,9 @@ const ManageBookings = () => {
                       </div>
                     </td>
 
-                    <td className="px-5 py-4 max-md:hidden">
+                    <td className="px-5 py-4">
                       {booking.pickupDate.split('T')[0]}
-                      <span className="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600">
+                      <span className="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-light text-gray-600">
                         to
                       </span>
                       {booking.returnDate.split('T')[0]}

@@ -1,6 +1,7 @@
 import React from 'react';
 import Title from './Title';
 import { assets } from '../assets/assets';
+import { motion } from 'motion/react';
 
 const testimonials = [
     {
@@ -45,7 +46,11 @@ const Testimonial = () => {
 
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {testimonials.map((testimonial, index) => (
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.2, ease: 'easeOut' }}
+                        viewport={{ once: true, amount: 0.3 }}
                         key={index}
                         className="bg-white rounded-2xl p-7 border border-gray-100
                        shadow-sm hover:shadow-lg
@@ -87,7 +92,7 @@ const Testimonial = () => {
                         <p className="text-gray-600 text-sm leading-6 mt-4">
                             "{testimonial.review}"
                         </p>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
 

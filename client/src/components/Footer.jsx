@@ -1,31 +1,44 @@
 import React from 'react';
 import { assets } from '../assets/assets';
+import { motion } from 'motion/react';
 
 const Footer = () => {
   return (
     <footer className="w-full mt-16 bg-light border-t border-borderColor/50">
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20 xl:px-24 py-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-20 xl:px-24 py-16">
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
 
           <div className="md:col-span-5 lg:col-span-5">
 
             <div className="flex items-center mb-5">
-              <img
+              <motion.img
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
                 src={assets.logo}
                 alt="Car Rental Logo"
                 className="h-9 w-auto"
               />
             </div>
 
-            <p className="text-sm text-gray-500 leading-7 max-w-md">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-sm text-gray-500 leading-7 max-w-md">
               Your trusted partner for comfortable, reliable, and
               hassle-free car rentals. From city drives to weekend
               getaways, we make every journey simple and enjoyable.
-            </p>
+            </motion.p>
 
-            <div className="flex items-center gap-3 mt-7">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="flex items-center gap-3 mt-7">
 
               <a
                 href="#"
@@ -69,7 +82,7 @@ const Footer = () => {
                 <span className="text-xs font-semibold"><img src={assets.instagram_logo} alt="" /></span>
               </a>
 
-            </div>
+            </motion.div>
 
           </div>
 
@@ -240,7 +253,7 @@ const Footer = () => {
           </div>
 
         </div>
-      </div>
+      </motion.div>
 
       <div className="border-t border-borderColor/60 bg-white">
 

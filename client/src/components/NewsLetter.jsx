@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {motion} from 'motion/react';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,12 @@ const Newsletter = () => {
 
   return (
     <section className="w-full px-6 sm:px-8 md:px-16 lg:px-24 xl:px-32 py-20">
-      <div className="max-w-7xl mx-auto">
+      <motion.div 
+      initial={{opacity:0, y:30}}
+      whileInView={{opacity:1, y:0}}
+      transition={{duration:0.6, ease:'easeOut'}}
+      viewport={{once:true, amount:0.3}}
+      className="max-w-7xl mx-auto">
 
         <div className="relative overflow-hidden rounded-2xl bg-primary px-6 py-14 sm:px-10 md:px-16">
 
@@ -94,7 +100,7 @@ const Newsletter = () => {
 
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
