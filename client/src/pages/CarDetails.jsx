@@ -5,6 +5,7 @@ import Loader from '../components/Loader';
 import axios from 'axios';
 import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
+import { motion } from 'motion/react';
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -51,15 +52,30 @@ const CarDetails = () => {
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12'>
 
-        <div className='lg:col-span-2'>
-          <img src={car.image} alt={`${car.brand} ${car.model}`} className='w-full h-auto md:mx-h-100 object-cover rounded-xl mb-6 shadow-md' />
-          <div className='space-y-6'>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className='lg:col-span-2'>
+          <motion.img
+            initial={{ scale: 0.98, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            src={car.image}
+            alt={`${car.brand} ${car.model}`}
+            className='w-full h-auto md:mx-h-100 object-cover rounded-xl mb-6 shadow-md' />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className='space-y-6'>
             <div>
               <h1 className='text-3xl font-bold'>{car.brand} | {car.model}</h1>
               <p className='text-lg'>{car.category} • {car.year}</p>
             </div>
             <hr className='border-borderColor my-6' />
-            <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+            <div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+              className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
               {
                 [
                   { icon: assets.users_icon, text: `${car.seating_capacity} Seats` },
@@ -101,10 +117,13 @@ const CarDetails = () => {
               </ul>
             </div>
 
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <form
+        <motion.form
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
           className='shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500'
           onSubmit={handleSubmit}>
 
@@ -142,7 +161,7 @@ const CarDetails = () => {
 
           <p className='text-center text-sm'>No Credit Card required to reserve</p>
 
-        </form>
+        </motion.form>
       </div>
     </div>
   ) : (
